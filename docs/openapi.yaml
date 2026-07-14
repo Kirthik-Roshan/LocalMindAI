@@ -1,0 +1,780 @@
+openapi: 3.1.0
+info:
+  title: LocalMind AI API
+  description: >-
+    Privacy-first offline AI workspace. Every AI capability runs locally via
+    Ollama. No cloud APIs, no keys, no telemetry.
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:8000
+    description: Local backend
+tags:
+  - name: health
+  - name: system
+  - name: dashboard
+  - name: models
+  - name: workspace
+  - name: documents
+  - name: images
+  - name: voice
+  - name: knowledge
+  - name: search
+  - name: automation
+  - name: exports
+  - name: settings
+
+paths:
+  /health:
+    get:
+      tags: [health]
+      summary: Root health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+
+  /api/v1/health:
+    get:
+      tags: [health]
+      summary: API health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+
+  /api/v1/system/stats:
+    get:
+      tags: [system]
+      summary: Live system and Ollama stats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SystemStats" }
+
+  /api/v1/dashboard/overview:
+    get:
+      tags: [dashboard]
+      summary: Dashboard aggregate data
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DashboardOverview" }
+
+  /api/v1/models:
+    get:
+      tags: [models]
+      summary: List local Ollama models
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ModelsResponse" }
+
+  /api/v1/models/pull:
+    post:
+      tags: [models]
+      summary: Pull a model (best-effort)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  name: { type: string }
+
+  /api/v1/workspace/transform:
+    post:
+      tags: [workspace]
+      summary: Transform text locally
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransformRequest" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActionResult" }
+
+  /api/v1/workspace/notes:
+    get:
+      tags: [workspace]
+      summary: List notes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Note" }
+    post:
+      tags: [workspace]
+      summary: Create a note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, content]
+              properties:
+                title: { type: string }
+                content: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Note" }
+
+  /api/v1/workspace/notes/{id}:
+    put:
+      tags: [workspace]
+      summary: Update a note
+      parameters:
+        - $ref: "#/components/parameters/IntId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                content: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Note" }
+    delete:
+      tags: [workspace]
+      summary: Delete a note
+      parameters:
+        - $ref: "#/components/parameters/IntId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Deleted" }
+
+  /api/v1/documents/upload:
+    post:
+      tags: [documents]
+      summary: Upload a document (multipart)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DocumentItem" }
+
+  /api/v1/documents:
+    get:
+      tags: [documents]
+      summary: List documents
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/DocumentItem" }
+
+  /api/v1/documents/{id}:
+    get:
+      tags: [documents]
+      summary: Get a document with extracted text
+      parameters:
+        - $ref: "#/components/parameters/IntId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DocumentDetail" }
+    delete:
+      tags: [documents]
+      summary: Delete a document
+      parameters:
+        - $ref: "#/components/parameters/IntId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Deleted" }
+
+  /api/v1/documents/{id}/analyze:
+    post:
+      tags: [documents]
+      summary: Analyze a document
+      parameters:
+        - $ref: "#/components/parameters/IntId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [task]
+              properties:
+                task:
+                  type: string
+                  enum: [summary, key_points, entities, timeline, executive_summary, qa]
+                question: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActionResult" }
+
+  /api/v1/documents/compare:
+    post:
+      tags: [documents]
+      summary: Compare documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  items: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result: { type: string }
+
+  /api/v1/images/analyze:
+    post:
+      tags: [images]
+      summary: Analyze an image (multipart)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, task]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                task:
+                  type: string
+                  enum: [ocr, describe, caption, explain, chart, screenshot]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ImageResult" }
+
+  /api/v1/voice/transcribe:
+    post:
+      tags: [voice]
+      summary: Transcribe audio (multipart)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text: { type: string }
+                  duration: { type: number }
+
+  /api/v1/voice/command:
+    post:
+      tags: [voice]
+      summary: Interpret a voice command
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  intent: { type: string }
+                  response: { type: string }
+
+  /api/v1/knowledge/search:
+    post:
+      tags: [knowledge]
+      summary: Semantic search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+                top_k: { type: integer }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items: { $ref: "#/components/schemas/KnowledgeResult" }
+
+  /api/v1/knowledge/ask:
+    post:
+      tags: [knowledge]
+      summary: RAG answer with sources
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer: { type: string }
+                  sources:
+                    type: array
+                    items: { $ref: "#/components/schemas/KnowledgeSource" }
+
+  /api/v1/search:
+    post:
+      tags: [search]
+      summary: Unified smart search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+                types:
+                  type: array
+                  items: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items: { $ref: "#/components/schemas/SearchResult" }
+
+  /api/v1/automation/tasks:
+    get:
+      tags: [automation]
+      summary: List automation tasks
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AutomationTask" }
+
+  /api/v1/automation/run:
+    post:
+      tags: [automation]
+      summary: Run an automation task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [task]
+              properties:
+                task: { type: string }
+                input: { type: string }
+                options: { type: object, additionalProperties: true }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActionResult" }
+
+  /api/v1/exports:
+    get:
+      tags: [exports]
+      summary: List exports
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ExportItem" }
+    post:
+      tags: [exports]
+      summary: Create an export
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [format, content]
+              properties:
+                format:
+                  type: string
+                  enum: [pdf, docx, md, txt, json, csv]
+                title: { type: string }
+                content: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ExportItem" }
+
+  /api/v1/exports/{id}/download:
+    get:
+      tags: [exports]
+      summary: Download an export file
+      parameters:
+        - $ref: "#/components/parameters/IntId"
+      responses:
+        "200":
+          description: File stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+  /api/v1/settings:
+    get:
+      tags: [settings]
+      summary: Get settings
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+    put:
+      tags: [settings]
+      summary: Update settings (partial)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SettingsPartial" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+
+components:
+  parameters:
+    IntId:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer }
+
+  schemas:
+    Health:
+      type: object
+      properties:
+        status: { type: string, example: ok }
+        service: { type: string, example: localmind }
+        version: { type: string }
+    Error:
+      type: object
+      properties:
+        detail: { type: string }
+    Deleted:
+      type: object
+      properties:
+        deleted: { type: boolean, example: true }
+    ActionResult:
+      type: object
+      properties:
+        action: { type: string }
+        task: { type: string }
+        result: { type: string }
+    SystemStats:
+      type: object
+      properties:
+        cpu_percent: { type: number }
+        memory:
+          type: object
+          properties:
+            used_gb: { type: number }
+            total_gb: { type: number }
+            percent: { type: number }
+        disk:
+          type: object
+          properties:
+            used_gb: { type: number }
+            total_gb: { type: number }
+            percent: { type: number }
+        indexed_files: { type: integer }
+        storage:
+          type: object
+          properties:
+            documents: { type: integer }
+            images: { type: integer }
+            exports: { type: integer }
+        ollama:
+          type: object
+          properties:
+            online: { type: boolean }
+            model: { type: string }
+            version: { type: string }
+        health:
+          type: string
+          enum: [healthy, degraded, offline]
+    DashboardOverview:
+      type: object
+      properties:
+        stats:
+          type: object
+          properties:
+            documents: { type: integer }
+            notes: { type: integer }
+            ai_actions: { type: integer }
+            indexed_chunks: { type: integer }
+        recent_documents:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              name: { type: string }
+              type: { type: string }
+              created_at: { type: string }
+        recent_actions:
+          type: array
+          items: { $ref: "#/components/schemas/RecentAction" }
+        recent_workspaces:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              title: { type: string }
+              updated_at: { type: string }
+    RecentAction:
+      type: object
+      properties:
+        id: { type: integer }
+        action: { type: string }
+        module: { type: string }
+        summary: { type: string }
+        created_at: { type: string }
+    ModelInfo:
+      type: object
+      properties:
+        name: { type: string }
+        size: { type: string }
+        modified: { type: string }
+    ModelsResponse:
+      type: object
+      properties:
+        models:
+          type: array
+          items: { $ref: "#/components/schemas/ModelInfo" }
+        current: { type: string }
+        online: { type: boolean }
+    TransformRequest:
+      type: object
+      required: [text, action]
+      properties:
+        text: { type: string }
+        action:
+          type: string
+          enum: [rewrite, expand, summarize, translate, improve, report, action_items, table, email, docs, minutes]
+        options:
+          type: object
+          properties:
+            tone: { type: string }
+            language: { type: string }
+            format: { type: string }
+    Note:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        content: { type: string }
+        created_at: { type: string }
+        updated_at: { type: string }
+    DocumentItem:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        type: { type: string }
+        size: { type: integer }
+        pages: { type: integer }
+        created_at: { type: string }
+    DocumentDetail:
+      allOf:
+        - $ref: "#/components/schemas/DocumentItem"
+        - type: object
+          properties:
+            extracted_text: { type: string }
+    ImageResult:
+      type: object
+      properties:
+        task: { type: string }
+        text: { type: string }
+        description: { type: string }
+        caption: { type: string }
+    KnowledgeResult:
+      type: object
+      properties:
+        text: { type: string }
+        score: { type: number }
+        source: { type: string }
+        document_id: { type: integer }
+    KnowledgeSource:
+      type: object
+      properties:
+        source: { type: string }
+        document_id: { type: integer }
+        snippet: { type: string }
+    SearchResult:
+      type: object
+      properties:
+        type: { type: string }
+        title: { type: string }
+        snippet: { type: string }
+        score: { type: number }
+        id: { type: integer }
+        module: { type: string }
+    AutomationTask:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+    ExportItem:
+      type: object
+      properties:
+        id: { type: integer }
+        filename: { type: string }
+        format: { type: string }
+        download_url: { type: string }
+        created_at: { type: string }
+    Settings:
+      type: object
+      properties:
+        model: { type: string }
+        temperature: { type: number }
+        top_p: { type: number }
+        max_tokens: { type: integer }
+        embedding_model: { type: string }
+        ocr_engine: { type: string }
+        speech_engine: { type: string }
+        theme: { type: string }
+        language: { type: string }
+    SettingsPartial:
+      type: object
+      properties:
+        model: { type: string }
+        temperature: { type: number }
+        top_p: { type: number }
+        max_tokens: { type: integer }
+        embedding_model: { type: string }
+        ocr_engine: { type: string }
+        speech_engine: { type: string }
+        theme: { type: string }
+        language: { type: string }

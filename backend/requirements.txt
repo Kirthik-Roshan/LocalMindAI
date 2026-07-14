@@ -1,0 +1,42 @@
+# --- Core web framework ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+python-multipart==0.0.20
+
+# --- HTTP client (Ollama) ---
+httpx==0.28.1
+
+# --- Persistence ---
+SQLAlchemy==2.0.36
+
+# --- Vector store ---
+chromadb==0.5.23
+
+# --- System metrics ---
+psutil==6.1.1
+numpy==2.2.1
+
+# --- Optional / heavy dependencies -------------------------------------------
+# Everything below is imported lazily inside services and wrapped in try/except.
+# The server boots and runs even if these are not installed.
+
+# Document parsing
+pypdf==5.1.0                 # optional: PDF text extraction
+python-docx==1.1.2           # optional: DOCX read/write
+
+# OCR / images
+pytesseract==0.3.13          # optional: needs the `tesseract-ocr` system binary
+pillow==11.1.0               # optional: image loading for OCR
+
+# Speech-to-text
+faster-whisper==1.1.1        # optional/heavy: needs `ffmpeg` system binary
+
+# Export rendering
+reportlab==4.2.5             # optional: PDF export
+markdown==3.7                # optional: markdown helpers
+
+# --- Testing ---
+pytest==8.3.4
