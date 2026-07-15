@@ -1,4 +1,4 @@
-<div align="center">
+<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-37" src="https://github.com/user-attachments/assets/fed65970-6056-45eb-9498-ef28038eed52" /><img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-37" src="https://github.com/user-attachments/assets/038fa7e9-16b7-449b-84fc-e5fb1f079ef6" /><img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-37" src="https://github.com/user-attachments/assets/2dc99d59-3e00-4b14-828a-4b95d3a7ee8d" /><div align="center">
 
 # 🧠 LocalMind AI
 
@@ -33,20 +33,23 @@ It is **not** a chat window. It is a multi-module workspace where AI is woven in
 
 > Screenshots are placeholders until you capture your own. See [`assets/screenshots/`](assets/screenshots/).
 
-| Dashboard | AI Workspace | Document Intelligence |
-| --- | --- | --- |
-| ![Dashboard](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-39" src="https://github.com/user-attachments/assets/d791502c-144c-419f-a82d-6c524be58839" />
-) | ![Workspace](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-47" src="https://github.com/user-attachments/assets/576f8ba4-65ee-42ec-8f99-75787ce341b8" />
-) | ![Documents](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-53" src="https://github.com/user-attachments/assets/5a2630ad-ea23-4bee-bd51-c16d17208046" />
-) |
+# 🖼️ Application Preview
 
-| Knowledge Base | Smart Search | Settings |
-| --- | --- | --- |
-| ![Knowledge](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-53" src="https://github.com/user-attachments/assets/6ff22f9d-f82e-41e8-8d89-d944d7706c2e" />
-) | ![Search](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-19" src="https://github.com/user-attachments/assets/d083e94d-7bef-4101-9cae-c9403820c2ad" />
-) | ![Settings](![Uploading Screenshot from 2026-07-15 15-03-37.png…]()
-) |
+| Dashboard | AI Workspace |
+|-----------|--------------|
+| <img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-39" src="https://github.com/user-attachments/assets/08dd2277-4b08-4f16-b91b-43310d1173b0" />|<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-47" src="https://github.com/user-attachments/assets/0b7e0508-3b48-4c2d-8158-32c5300a8a8c" />
 
+| Document Intelligence | Knowledge Base |
+|----------------------|----------------|
+| <img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-53" src="https://github.com/user-attachments/assets/775c4f98-68e0-4d05-b4d5-ec2585152a83" />
+ | <img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-13" src="https://github.com/user-attachments/assets/b2807e9c-c9c2-4665-ba43-963c1a55a74b" />
+ |
+
+| Smart Search | Settings |
+|-------------|----------|
+| <img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-19" src="https://github.com/user-attachments/assets/3c0080dc-1ac9-4791-aca6-5fd6b8e587cc" />
+ | <img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-37" src="https://github.com/user-attachments/assets/2ee0c6ea-86c5-4b92-bc01-685b664ef143" />
+ |
 ---
 
 ## 🧩 Features by Module
