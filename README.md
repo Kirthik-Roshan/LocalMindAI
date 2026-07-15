@@ -35,11 +35,17 @@ It is **not** a chat window. It is a multi-module workspace where AI is woven in
 
 | Dashboard | AI Workspace | Document Intelligence |
 | --- | --- | --- |
-| ![Dashboard](assets/screenshots/dashboard.png) | ![Workspace](assets/screenshots/workspace.png) | ![Documents](assets/screenshots/documents.png) |
+| ![Dashboard](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-39" src="https://github.com/user-attachments/assets/d791502c-144c-419f-a82d-6c524be58839" />
+) | ![Workspace](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-47" src="https://github.com/user-attachments/assets/576f8ba4-65ee-42ec-8f99-75787ce341b8" />
+) | ![Documents](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-53" src="https://github.com/user-attachments/assets/5a2630ad-ea23-4bee-bd51-c16d17208046" />
+) |
 
 | Knowledge Base | Smart Search | Settings |
 | --- | --- | --- |
-| ![Knowledge](assets/screenshots/knowledge.png) | ![Search](assets/screenshots/search.png) | ![Settings](assets/screenshots/settings.png) |
+| ![Knowledge](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-02-53" src="https://github.com/user-attachments/assets/6ff22f9d-f82e-41e8-8d89-d944d7706c2e" />
+) | ![Search](<img width="1920" height="1080" alt="Screenshot from 2026-07-15 15-03-19" src="https://github.com/user-attachments/assets/d083e94d-7bef-4101-9cae-c9403820c2ad" />
+) | ![Settings](![Uploading Screenshot from 2026-07-15 15-03-37.png…]()
+) |
 
 ---
 
